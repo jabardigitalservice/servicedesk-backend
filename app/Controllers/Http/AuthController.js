@@ -29,6 +29,9 @@ class AuthController {
         return response.status(401).send({ err: err  })
       }
 
+      const user = { name: decoded['name'], email: decoded['email']}
+      console.log(user)
+      
       return decoded
     })
   }
