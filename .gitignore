@@ -12,4 +12,4 @@ database/*.sqlite
 
 package-lock.json
 
-jwt.json
+verify-signature.json
