@@ -1,15 +1,18 @@
 'use strict'
 
+const jwt = require('jsonwebtoken')
+
 class AuthController {
-  async getSplittedToken(req) {
+  async getToken(req) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1] 
-    
-    return token.split('.')
+
+    return token
   }
 
   async validateToken({ req, res }) {
-    const [ header, payload, signature ] = await this.getSplittedToken(req)
+    const token = await this.getToken(req)
+    console.log(token)
   }
 }
 
