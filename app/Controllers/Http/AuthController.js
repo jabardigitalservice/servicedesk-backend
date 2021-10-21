@@ -21,10 +21,14 @@ class AuthController {
     });
   }
 
-  async validateToken({ req, res }) {
+  async validateToken({ req, response }) {
     const token = await this.getToken(req)
 
     jwt.verify(token, await this.getKey, (err, decoded) => {      
+      if(err) {
+        return response.status(401).send({ err: err  })
+      }
+
       console.log(decoded)
     })
   }
