@@ -1,6 +1,10 @@
 'use strict'
 
 const jwt = require('jsonwebtoken')
+const jwksClient = require('jwks-rsa')
+const client = jwksClient({
+  jwksUri: 'https://sso.digitalservice.jabarprov.go.id/auth/realms/jabarprov/protocol/openid-connect/certs'
+})
 
 class AuthController {
   async getToken(req) {
@@ -10,9 +14,19 @@ class AuthController {
     return token
   }
 
+  async getKey(header, callback) {
+    client.getSigningKey(header.kid, (err, key) => {
+      const signingKey = key.publicKey || key.rsaPublicKey
+      callback(null, signingKey)
+    });
+  }
+
   async validateToken({ req, res }) {
     const token = await this.getToken(req)
-    console.log(token)
+
+    jwt.verify(token, await this.getKey, (err, decoded) => {      
+      console.log(decoded)
+    })
   }
 }
 
