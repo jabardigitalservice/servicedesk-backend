@@ -29,7 +29,7 @@ class AuthController {
         return response.status(401).send({ err: err  })
       }
 
-      console.log(decoded)
+      return decoded
     })
   }
 }
