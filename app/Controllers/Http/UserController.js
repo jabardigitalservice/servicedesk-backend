@@ -7,9 +7,13 @@ class UserController {
     const authController = new AuthController()
     const data = authController.validateToken({ req, response })
     
-    console.log(data)
+    data.then((result) => {
+      const user = { name: result['name'], email: result['email'] }
+      console.log(user)
+    }).catch((err) => {
+      console.log(err)
+    })
   }
 }
 
 module.exports = UserController
-
