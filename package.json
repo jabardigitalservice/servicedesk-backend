@@ -24,9 +24,13 @@
     "@adonisjs/framework": "^5.0.9",
     "@adonisjs/ignitor": "^2.0.8",
     "@adonisjs/lucid": "^6.1.3",
+    "@adonisjs/vow": "^1.0.17",
     "jwks-rsa": "^2.0.5"
   },
   "autoload": {
     "App": "./app"
+  },
+  "devDependencies": {
+    "mysql2": "^2.3.2"
   }
 }
