@@ -17,4 +17,4 @@
 const Route = use('Route')
 
 Route.get('/validate', 'AuthController.validateToken')
-Route.get('/me', 'UserController.getMe')
+Route.get('/me', 'UserController.getMe').middleware('ssoAuth')

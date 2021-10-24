@@ -1,14 +1,12 @@
 'use strict'
 
-const jwt = use('jsonwebtoken');
-
-const { test, trait } = use('Test/Suite')('Auth Controller')
+const jwt = use('jsonwebtoken')
+const { test, trait } = use('Test/Suite')('User Controller')
 
 trait('Test/ApiClient')
 
-test('make sure authenticator may parse token', async ({ client, assert }) => {
-
-    const rightNow = Date.now()
+test('make sure sso Token able to retrieve user information', async ({ client }) => {
+  const rightNow = Date.now()
     const exp = rightNow + 300
   
     const data = 
@@ -42,26 +40,29 @@ test('make sure authenticator may parse token', async ({ client, assert }) => {
     }
 
     var request = await jwt
-      .sign(
-      {
-          algorithm: data.header, 
-          payload: data.payload 
-      },
-      process.env.secret
-      )
+    .sign(
+    {
+        algorithm: data.header, 
+        payload: data.payload 
+    },
+    process.env.secret
+    )
 
-      console.log('token: ', request)
 
-   const response = await client
-    .get('/validate')
-    .header({
-      Authorization: `Bearer ${request}`,
-    })
-    .end()
+    const response = await client
+      .get('/me')
+      .header({
+        Authorization: `Bearer ${request}`,
+      })
+      .end()
 
     console.log('error', response.error)
     
-  response.assertStatus(200)
-  assert.isDefined(response)
-
+    response.assertStatus(200)
+    response.assertJSONSubset(
+      { 
+        "name":"Eka Dewi Triyanti",
+        "email":"anti_rei@yahoo.com"
+      }
+    )
 }).timeout(0)
