@@ -6,7 +6,11 @@ const Response = require('@adonisjs/framework/src/Response')
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-const jwt = use('jsonwebtoken')
+const jwt = use('jsonwebtoken') 
+const jwksClient = require('jwks-rsa')
+const client = jwksClient({
+  jwksUri: 'https://sso.digitalservice.jabarprov.go.id/auth/realms/jabarprov/protocol/openid-connect/certs'
+})
 
 class AuthController {
   /**
@@ -22,21 +26,36 @@ class AuthController {
     return token
   }
 
-  async handle ({ request }, next) {
-    
-    const token = await this.getToken(request)
-
-    const payload = await jwt.verify(token, process.env.secret)  
-
-    if (!payload) { return Response.status(401)}
-
-    request.body = payload
+  async getKey(header, callback) {
+    client.getSigningKey(header.kid, (err, key) => {
+      const signingKey = key.publicKey || key.rsaPublicKey
+      callback(null, signingKey)
+    });
+  }
   
-    console.log(payload)
+  async handle ({ request, response}, next ) {
+    const token = await this.getToken(request)
+  
+    const payload = await new Promise((resolve, reject) => {
+      jwt.verify(token, this.getKey, (error, payload) => {      
+        if(error) {
+          reject(error)
+        } else {
+          resolve(payload)
+        }
+      })
+    })
+    .then((payload) => {
+      return payload
+    })
+    .catch((error) => {
+      return response.status(401).send(error.message)
+    })
+    
+    request.body.payload = payload
 
     await next()
   }
-
 }
 
 module.exports = AuthController
