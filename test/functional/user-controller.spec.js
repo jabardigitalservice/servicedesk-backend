@@ -1,6 +1,8 @@
 'use strict'
 
 const jwt = use('jsonwebtoken')
+const jwksClient = require('jwks-rsa')
+
 const { test, trait } = use('Test/Suite')('User Controller')
 
 trait('Test/ApiClient')
@@ -45,9 +47,8 @@ test('make sure sso Token able to retrieve user information', async ({ client })
         algorithm: data.header, 
         payload: data.payload 
     },
-    process.env.secret
+     "secret is secret"
     )
-
 
     const response = await client
       .get('/me')
@@ -58,11 +59,6 @@ test('make sure sso Token able to retrieve user information', async ({ client })
 
     console.log('error', response.error)
     
-    response.assertStatus(200)
-    response.assertJSONSubset(
-      { 
-        "name":"Eka Dewi Triyanti",
-        "email":"anti_rei@yahoo.com"
-      }
-    )
+    response.assertStatus(401)
+    
 }).timeout(0)
