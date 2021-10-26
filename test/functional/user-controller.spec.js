@@ -1,13 +1,15 @@
 'use strict'
 
+const https = use('https')
 const jwt = use('jsonwebtoken')
 const jwksClient = require('jwks-rsa')
 
 const { test, trait } = use('Test/Suite')('User Controller')
 
 trait('Test/ApiClient')
+trait('Test/Browser')
 
-test('make sure sso Token able to retrieve user information', async ({ client }) => {
+test('make sure fake Token not able to retrieve user information', async ({ client }) => {
   const rightNow = Date.now()
     const exp = rightNow + 300
   
@@ -62,3 +64,42 @@ test('make sure sso Token able to retrieve user information', async ({ client })
     response.assertStatus(401)
     
 }).timeout(0)
+
+test('Valid SSO Token should able to retrieves user information', async ({ client }) => {
+  
+  const ssoToken = await client
+    .post('https://sso.digitalservice.jabarprov.go.id/auth/realms/jabarprov/protocol/openid-connect/token')
+    .header(
+      { 
+        "content-type" : "application/x-www-form-urlencoded",
+        "Accept-Encoding" : "gzip, deflate, br"
+      })
+    .send(
+      {
+        grant_type: 'password',
+        client_id: 'digiteam-servicedesk-service',
+        username: 'selvyfiriani@gmail.com',
+        password: 'Xcdu9vApTnys2Duu'
+      }
+    )
+    .end()
+
+  const token = ssoToken.body.access_token
+  console.log('sso', ssoToken)
+  console.log('token', token)
+  const response = await client
+      .get('/me')
+      .header({
+        Authorization: `Bearer ${token}`,
+      })
+      .end()
+
+    console.log('error', response.error)
+    response.assertStatus(200)
+    response.assertJSONSubset(
+      {
+        "name": "Selvy Fitriani",
+        "email": "selvyfiriani@gmail.com"
+      }
+    )
+})
