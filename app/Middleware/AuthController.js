@@ -52,7 +52,7 @@ class AuthController {
       return response.status(401).send(error.message)
     })
     
-    request.body.payload = payload
+    request.body = payload
 
     await next()
   }

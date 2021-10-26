@@ -2,8 +2,8 @@
 
 class UserController {
   async getMe({ request, response }) {
+    const data = request.body
     
-    const data = request.body.payload
     console.log('data user', data)
     response =
     {
