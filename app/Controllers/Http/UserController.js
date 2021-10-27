@@ -4,7 +4,6 @@ class UserController {
   async getMe({ request, response }) {
     const data = request.body
     
-    console.log('data user', data)
     response =
     {
       "name": data.name,

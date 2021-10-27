@@ -1,13 +1,10 @@
 'use strict'
 
-const https = use('https')
 const jwt = use('jsonwebtoken')
-const jwksClient = require('jwks-rsa')
 
 const { test, trait } = use('Test/Suite')('User Controller')
 
 trait('Test/ApiClient')
-trait('Test/Browser')
 
 test('make sure fake Token not able to retrieve user information', async ({ client }) => {
   const rightNow = Date.now()
@@ -59,13 +56,11 @@ test('make sure fake Token not able to retrieve user information', async ({ clie
       })
       .end()
 
-    console.log('error', response.error)
-    
     response.assertStatus(401)
     
 }).timeout(0)
 
-test('Valid SSO Token should able to retrieves user information', async ({ client }) => {
+test('Valid SSO Token should be able to retrieves user information', async ({ client }) => {
   
   const ssoToken = await client
     .post('https://sso.digitalservice.jabarprov.go.id/auth/realms/jabarprov/protocol/openid-connect/token')
@@ -85,8 +80,7 @@ test('Valid SSO Token should able to retrieves user information', async ({ clien
     .end()
 
   const token = ssoToken.body.access_token
-  console.log('sso', ssoToken)
-  console.log('token', token)
+ 
   const response = await client
       .get('/me')
       .header({
@@ -94,7 +88,6 @@ test('Valid SSO Token should able to retrieves user information', async ({ clien
       })
       .end()
 
-    console.log('error', response.error)
     response.assertStatus(200)
     response.assertJSONSubset(
       {
