@@ -1,28 +1,37 @@
-# Adonis API application
+# Authorization with JWT 
 
-This is the boilerplate for creating an API server in AdonisJs, it comes pre-configured with.
+This simple app aims to use jwt for authorization in AdonisJs. There is only one endpoint, that is `\me`. 
+The endpoint aims to get information about user with parsing JWT in authorization header. 
 
-1. Bodyparser
-2. Authentication
-3. CORS
-4. Lucid ORM
-5. Migrations and seeds
+This app (for now) only validate jwt issued by  https://sso.digitalservice.jabarprov.go.id/auth/realms/jabarprov. So, if you need to try this app, please contact ITDEV team for getting new account.
 
-## Setup
+## Pre-Requisites
+* [node 16.10.0](https://nodejs.org/en/download/)
+* [npm 7.24.0](https://www.npmjs.com/package/download)
+* [AdonisJS CLI](https://www.npmjs.com/package/@adonisjs/cli)
+* [Postman](https://www.postman.com/downloads/) 
 
-Use the adonis command to install the blueprint
-
-```bash
-adonis new yardstick --api-only
+## Run Test
+```
+adonis test
 ```
 
-or manually clone the repo and then run `npm install`.
-
-
-### Migrations
-
-Run the following command to run startup migrations.
-
-```js
-adonis migration:run
+## Run App
+* Clone this repository
+``` 
+git clone https://github.com/jabardigitalservice/servicedesk-backend 
 ```
+* Install dependencies
+``` 
+npm install 
+```
+* Run app
+```
+adonis serve --dev
+```
+
+App will running on port http://localhost:3333. So, go to  http://localhost:3333/me and input your JWT. Good luck! 
+
+---
+
+If there are any inputs, please contact us through email (selvyfiriani@gmail.com, anti_rei@yahoo.com) Thanks!
