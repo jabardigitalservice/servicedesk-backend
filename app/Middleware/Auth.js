@@ -12,6 +12,7 @@ const secret = require('../../test.json')
 const client = jwksClient({
   jwksUri: secret.JWKS_URL
 })
+const kid = process.env.KID
 
 class AuthController {
   /**
@@ -26,36 +27,23 @@ class AuthController {
    
     return token
   }
-
-  async getKey(header, callback) {
-    client.getSigningKey(header.kid, (err, key) => {
-      const signingKey = key.publicKey || key.rsaPublicKey
-      callback(null, signingKey)
-    });
-  }
   
-  async handle ({ request, response}, next ) {
-    const token = await this.getToken(request)
- 
-    const payload = await new Promise((resolve, reject) => {
-      jwt.verify(token, this.getKey, (error, payload) => {      
-        if(error) {
-          reject(error)
-        } else {
-          resolve(payload)
-        }
-      })
-    })
-    .then((payload) => {
-      return payload
-    })
-    .catch((error) => {
-      return response.status(401).send(error.message)
-    })
+  async getKey() {
+    const key = await client.getSigningKey(kid)
+    const signingKey = key.getPublicKey()
     
-    request.body = payload
+    return signingKey
+  }
+  async handle ({ request, response, session }, next ) {
+    const token = await this.getToken(request)
+    const key = await this.getKey()
 
-    await next()
+    try {
+      const decoded = jwt.verify(token, key)
+      await next()
+    } catch (err) {
+      response.status(401).send({error: err.message})
+    }
   }
 }
 
