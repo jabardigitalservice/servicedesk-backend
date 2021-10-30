@@ -1,16 +1,8 @@
 'use strict'
 
 class UserController {
-  async getMe({ request, response }) {
-    
-    const data = request.body
-    response =
-    {
-      "name": data.name,
-      "email": data.email
-    }
-
-    return response
+  async getMe({ request, response, session }) {
+    return session.get('user')
   }
 
 }

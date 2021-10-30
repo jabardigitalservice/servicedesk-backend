@@ -40,9 +40,12 @@ class AuthController {
 
     try {
       const decoded = jwt.verify(token, key)
+      const user = {name: decoded['name'], email: decoded['email']}
+      session.put('user', user)
       await next()
     } catch (err) {
-      response.status(401).send({error: err.message})
+      session.forget('user')
+      response.status(401).send({ error: err.message })
     }
   }
 }
