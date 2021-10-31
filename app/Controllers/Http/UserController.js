@@ -1,10 +1,9 @@
 'use strict'
 
 class UserController {
-  async getMe({ request, response, session }) {
+  async getMe({ session }) {
     return session.get('user')
   }
-
 }
 
 module.exports = UserController

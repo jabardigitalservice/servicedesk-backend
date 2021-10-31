@@ -1,12 +1,11 @@
 'use strict'
 
-const jwt = use('jsonwebtoken')
 const { test, trait } = use('Test/Suite')('User Controller')
 const testVariables = require('../../test.json')
 
 trait('Test/ApiClient')
 
-test('Valid SSO token should be able to retrieves user information', async ({ assert, client }) => {
+test('Valid SSO token should be able to retrieves user information', async ({ client }) => {
   const SSO_TOKEN = await client
     .post(testVariables.TokenURL)
     .header(
