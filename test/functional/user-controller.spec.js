@@ -8,7 +8,7 @@ trait('Test/ApiClient')
 
 test('Valid SSO token should be able to retrieves user information', async ({ client }) => {
   const SSO_TOKEN = await client
-    .post(Config.get('app.sso.tokenUrl'))
+    .post(Config.get('sso.tokenUrl'))
     .header(
       { 
         "content-type" : "application/x-www-form-urlencoded",
@@ -18,7 +18,7 @@ test('Valid SSO token should be able to retrieves user information', async ({ cl
     .send(
       {
         grant_type: "password",
-        client_id: Config.get('app.sso.client_id'),
+        client_id: Config.get('sso.client_id'),
         username: process.env.USERNAME,
         password: process.env.PASSWORD
       }

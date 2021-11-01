@@ -9,9 +9,9 @@ const Config = use('Config')
 const jwt = use('jsonwebtoken') 
 const jwksClient = require('jwks-rsa')
 const client = jwksClient({
-  jwksUri: Config.get('app.sso.jwks')
+  jwksUri: Config.get('sso.jwks')
 })
-const kid = Config.get('app.sso.kid')
+const kid = Config.get('sso.kid')
 
 class AuthController {
   /**

@@ -239,11 +239,5 @@ module.exports = {
     sameSite: false,
     path: '/',
     maxAge: 7200
-  },
-  sso:{
-    tokenUrl: Env.get('TOKEN_URL'),
-    jwks: Env.get('JWKS_URL'),
-    kid: Env.get('KID'),
-    client_id: Env.get('CLIENT_ID')
   }
 }
