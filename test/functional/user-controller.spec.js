@@ -1,12 +1,14 @@
 'use strict'
 
+const Config = use('Config')
+
 const { test, trait } = use('Test/Suite')('User Controller')
 
 trait('Test/ApiClient')
 
 test('Valid SSO token should be able to retrieves user information', async ({ client }) => {
   const SSO_TOKEN = await client
-    .post(process.env.TokenURL)
+    .post(Config.get('app.sso.tokenUrl'))
     .header(
       { 
         "content-type" : "application/x-www-form-urlencoded",
@@ -15,10 +17,10 @@ test('Valid SSO token should be able to retrieves user information', async ({ cl
     )
     .send(
       {
-        grant_type: process.env.grant_type,
-        client_id: process.env.client_id,
-        username: process.env.selvy,
-        password: process.env.selvyPass
+        grant_type: "password",
+        client_id: Config.get('app.sso.client_id'),
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD
       }
     )
     .end()
@@ -35,7 +37,7 @@ test('Valid SSO token should be able to retrieves user information', async ({ cl
   response.assertStatus(200)
   response.assertJSONSubset({
     name: 'Selvy Fitriani',
-    email: process.env.selvy
+    email: process.env.USERNAME
   })
 }).timeout(0)
   

@@ -4,12 +4,14 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Config = use('Config')
+
 const jwt = use('jsonwebtoken') 
 const jwksClient = require('jwks-rsa')
 const client = jwksClient({
-  jwksUri: process.env.JWKS_URL
+  jwksUri: Config.get('app.sso.jwks')
 })
-const kid = process.env.KID
+const kid = Config.get('app.sso.kid')
 
 class AuthController {
   /**
