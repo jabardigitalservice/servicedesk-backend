@@ -31,17 +31,17 @@ class AuthController {
     
     return signingKey
   }
-  async handle ({ request, response, session }, next ) {
+  async handle ({ request, response }, next ) {
     const token = await this.getToken(request)
     const key = await this.getKey()
 
     try {
       const decoded = jwt.verify(token, key)
       const user = {name: decoded['name'], email: decoded['email']}
-      session.put('user', user)
+      request.user = user
+
       await next()
     } catch (err) {
-      session.forget('user')
       response.status(401).send({ error: err.message })
     }
   }

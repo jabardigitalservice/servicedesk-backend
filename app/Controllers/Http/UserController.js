@@ -1,8 +1,8 @@
 'use strict'
 
 class UserController {
-  async getMe({ session }) {
-    return session.get('user')
+  async getMe({ request }) {
+    return request.user
   }
 }
 
