@@ -6,9 +6,8 @@
 
 const jwt = use('jsonwebtoken') 
 const jwksClient = require('jwks-rsa')
-const secret = require('../../test.json')
 const client = jwksClient({
-  jwksUri: secret.JWKS_URL
+  jwksUri: process.env.JWKS_URL
 })
 const kid = process.env.KID
 
