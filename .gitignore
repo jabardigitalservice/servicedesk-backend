@@ -11,8 +11,6 @@ tmp
 # The development sqlite file
 database/*.sqlite
 
-package-lock.json
-
 jwt.json
 
 test.json
