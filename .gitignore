@@ -6,10 +6,11 @@ tmp
 
 # Environment variables, never commit this file
 .env
+.env.testing
 
 # The development sqlite file
 database/*.sqlite
 
-package-lock.json
-
 jwt.json
+
+test.json
