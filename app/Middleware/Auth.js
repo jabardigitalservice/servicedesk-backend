@@ -42,7 +42,7 @@ class AuthController {
       const user = {name: decoded['name'], email: decoded['email']}
       request.user = user
 
-      await next()
+      next()
     } catch (err) {
       response.status(401).send({ error: err.message })
     }
