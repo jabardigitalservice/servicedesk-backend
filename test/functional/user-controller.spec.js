@@ -33,10 +33,12 @@ test('Valid SSO token should be able to retrieves user information', async ({ cl
       Authorization: `Bearer ${token}`,
     })
     .end()
+
+    console.log('error', response.error)
   
   response.assertStatus(200)
   response.assertJSONSubset({
-    name: 'Selvy Fitriani',
+    name: process.env.USER,
     email: process.env.USERNAME
   })
 }).timeout(0)
