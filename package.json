@@ -29,5 +29,8 @@
   },
   "autoload": {
     "App": "./app"
+  },
+  "devDependencies": {
+    "eslint": "^8.2.0"
   }
 }
