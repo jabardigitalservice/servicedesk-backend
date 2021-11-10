@@ -1,16 +1,15 @@
-'use strict'
+'use strict';
 
-const Config = use('Config')
+const Config = use('Config');
+const { test, trait } = use('Test/Suite')('User Controller');
 
-const { test, trait } = use('Test/Suite')('User Controller')
+trait('Test/ApiClient');
 
-trait('Test/ApiClient')
-
-test('Valid SSO token should be able to retrieves user information', async ({ client }) => {
+test('Valid SSO token should be able to retrieves user information', async (({ client }) => {
   const SSO_TOKEN = await client
     .post(Config.get('sso.tokenUrl'))
     .header(
-      { 
+      {
         "content-type" : "application/x-www-form-urlencoded",
         "Accept-Encoding" : "gzip, deflate, br"
       }
@@ -26,18 +25,17 @@ test('Valid SSO token should be able to retrieves user information', async ({ cl
     .end()
 
   const token = SSO_TOKEN.body.access_token
-    
+
   const response = await client
     .get('/me')
     .header({
       Authorization: `Bearer ${token}`,
     })
     .end()
-  
+
   response.assertStatus(200)
   response.assertJSONSubset({
     name: process.env.USER,
     email: process.env.USERNAME
   })
-}).timeout(0)
-  
+})).timeout(0)
