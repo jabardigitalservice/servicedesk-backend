@@ -27,7 +27,7 @@
     },
     "overrides": [
         {
-          "files": ["./test/functional/*.spec.js"],
+          "files": ["./test/functional/*.spec.js", "./vowfile.js"],
           "rules": {
             "max-lines-per-function": ["off"]
           }
