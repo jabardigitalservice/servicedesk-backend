@@ -22,6 +22,9 @@
             "error", { "max": 25 }
         ]
     },
+    "globals": {
+        "use": "readonly"
+    },
     "overrides": [
         {
           "files": ["./test/functional/*.spec.js"],
