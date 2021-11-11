@@ -8,3 +8,9 @@ test('isValid should return true for valid category', async ({ assert }) => {
 
   assert.isTrue(category.isValid())
 })
+
+test('isValid should return false for empty name', async ({ assert }) => {
+  const category = new Category(null, 'description')
+
+  assert.isFalse(category.isValid())
+})
