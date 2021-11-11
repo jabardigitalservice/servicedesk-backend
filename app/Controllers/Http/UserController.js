@@ -1,7 +1,7 @@
 'use strict'
 
 class UserController {
-  async getMe({ request }) {
+  async getMe ({ request }) {
     return request.user
   }
 }

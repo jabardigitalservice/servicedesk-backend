@@ -10,14 +10,14 @@ test('Valid SSO token should be able to retrieves user information', async ({ cl
   const SSO_TOKEN = await client
     .post(Config.get('sso.tokenUrl'))
     .header(
-      { 
-        "content-type" : "application/x-www-form-urlencoded",
-        "Accept-Encoding" : "gzip, deflate, br"
+      {
+        'content-type': 'application/x-www-form-urlencoded',
+        'Accept-Encoding': 'gzip, deflate, br'
       }
     )
     .send(
       {
-        grant_type: "password",
+        grant_type: 'password',
         client_id: Config.get('sso.client_id'),
         username: process.env.USERNAME,
         password: process.env.PASSWORD
@@ -26,18 +26,17 @@ test('Valid SSO token should be able to retrieves user information', async ({ cl
     .end()
 
   const token = SSO_TOKEN.body.access_token
-    
+
   const response = await client
     .get('/me')
     .header({
       Authorization: `Bearer ${token}`,
     })
     .end()
-  
+
   response.assertStatus(200)
   response.assertJSONSubset({
     name: process.env.USER,
     email: process.env.USERNAME
   })
 }).timeout(0)
-  

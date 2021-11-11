@@ -6,7 +6,7 @@
 
 const Config = use('Config')
 
-const jwt = use('jsonwebtoken') 
+const jwt = use('jsonwebtoken')
 const jwksClient = require('jwks-rsa')
 const client = jwksClient({
   jwksUri: Config.get('sso.jwks')
@@ -20,26 +20,27 @@ class AuthController {
    * @param {Function} next
    */
 
-   async getToken({ request }) {
-    const authHeader = request.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1] 
-   
+  async getToken ({ request }) {
+    const authHeader = request.headers.authorization
+    const token = authHeader && authHeader.split(' ')[1]
+
     return token
   }
-  
-  async getKey() {
+
+  async getKey () {
     const key = await client.getSigningKey(kid)
     const signingKey = key.getPublicKey()
-    
+
     return signingKey
   }
-  async handle ({ request, response }, next ) {
+
+  async handle ({ request, response }, next) {
     const token = await this.getToken(request)
     const key = await this.getKey()
 
     try {
       const decoded = jwt.verify(token, key)
-      const user = {name: decoded['name'], email: decoded['email']}
+      const user = { name: decoded.name, email: decoded.email }
       request.user = user
 
       next()
