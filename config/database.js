@@ -16,7 +16,7 @@ module.exports = {
   | interacting with SQL databases.
   |
   */
-  connection: Env.get('DB_CONNECTION', 'sqlite'),
+  connection: Env.get('DB_CONNECTION', 'pg'),
 
   /*
   |--------------------------------------------------------------------------
@@ -80,5 +80,6 @@ module.exports = {
       database: Env.get('DB_DATABASE', 'adonis')
     },
     debug: Env.get('DB_DEBUG', false)
-  }
+  },
+
 }
