@@ -53,3 +53,21 @@ test('get detail of a category', async ({ client, assert }) => {
   assert.exists(response.body.data.categories)
   assert.equal(response.body.data.categories.length, 1)
 })
+
+test('create new category', async ({ client, assert }) => {
+  const data = {
+    query: `
+      mutation {
+        createCategory(name: "Category name", description: "Category description"){
+          id
+        }
+      }
+    `
+  }
+
+  const response = await client.post('/graphql').send(data).end()
+
+  response.assertStatus(200)
+  assert.exists(response.body.data.createCategory)
+  assert.exists(response.body.data.createCategory.id)
+})

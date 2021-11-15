@@ -1,3 +1,7 @@
-const categoryQueries = require('./queries')
+const queries = require('./queries')
+const mutations = require('./mutations')
 
-module.exports = categoryQueries
+module.exports = {
+  queries,
+  mutations
+}

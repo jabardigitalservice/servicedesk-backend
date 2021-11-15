@@ -1,9 +1,12 @@
-const categoryQueries = require('./category')
+const categoryResolvers = require('./category')
 
 // const { categoryQueries } = require('./category')
 const resolvers = {
   Query: {
-    ...categoryQueries
+    ...categoryResolvers.queries
+  },
+  Mutation: {
+    ...categoryResolvers.mutations
   }
 }
 
