@@ -14,7 +14,7 @@ const mutations = {
       category.$attributes.name = args.name ? args.name : category.$attributes.name
       category.$attributes.description = args.description ? args.description : category.$attributes.description
       category.save()
-    } catch (err) {
+    } catch {
       throw new Error('User not found')
     }
 
@@ -23,7 +23,12 @@ const mutations = {
 
   async deleteCategory (parent, args) {
     const category = await Category.findBy('id', args.id)
-    await category.delete()
+
+    try {
+      await category.delete()
+    } catch {
+      throw new Error('User not found')
+    }
 
     return (await Category.all()).toJSON()
   }
