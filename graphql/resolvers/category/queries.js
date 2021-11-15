@@ -1,11 +1,16 @@
 const Category = use('App/Models/Category')
 
 const queries = {
-  async categories (parent, args) {
-    const data = args.id ? await Category.findBy('id', args.id) : await Category.all()
-    const categories = args.id ? [data.toJSON()] : data.toJSON()
+  async categories () {
+    const categories = await Category.all()
 
-    return categories
+    return categories.toJSON()
+  },
+
+  async getCategory (parent, args) {
+    const category = await Category.findBy('id', args.id)
+
+    return category
   }
 }
 
