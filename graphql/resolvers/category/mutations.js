@@ -9,10 +9,14 @@ const mutations = {
 
   async updateCategory (parent, args) {
     const category = await Category.findBy('id', args.id)
-    category.$attributes.name = args.name ? args.name : category.$attributes.name
-    category.$attributes.description = args.description ? args.description : category.$attributes.description
 
-    category.save()
+    try {
+      category.$attributes.name = args.name ? args.name : category.$attributes.name
+      category.$attributes.description = args.description ? args.description : category.$attributes.description
+      category.save()
+    } catch (err) {
+      throw new Error('User not found')
+    }
 
     return category
   },
