@@ -91,9 +91,29 @@ test('update existing category', async ({ client, assert }) => {
   const response = await client.post('/graphql').send(data).end()
 
   response.assertStatus(200)
-
   assert.exists(response.body.data)
   assert.equal(response.body.data.updateCategory.id, id)
   assert.equal(response.body.data.updateCategory.name, 'New category name')
   assert.equal(response.body.data.updateCategory.description, 'New category description')
+})
+
+test('delete existing category', async ({ client, assert }) => {
+  const category = await Factory.model('App/Models/Category').create()
+  const id = category.$attributes.id
+
+  const data = {
+    query: `
+      mutation {
+        deleteCategory(id: ${id}) {
+          id
+        }
+      }
+    `
+  }
+
+  const response = await client.post('/graphql').send(data).end()
+
+  response.assertStatus(200)
+  assert.exists(response.body.data.deleteCategory)
+  assert.equal(response.body.data.deleteCategory.length, 0)
 })

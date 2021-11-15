@@ -15,6 +15,13 @@ const mutations = {
     category.save()
 
     return category
+  },
+
+  async deleteCategory (parent, args) {
+    const category = await Category.findBy('id', args.id)
+    await category.delete()
+
+    return (await Category.all()).toJSON()
   }
 }
 
