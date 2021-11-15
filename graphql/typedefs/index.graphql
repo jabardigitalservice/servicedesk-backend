@@ -2,6 +2,7 @@ type Query {
   categories(id: Int): [Category]
 }
 
-type Mutation {
+type Mutation {  
   createCategory(name: String!, description: String): Category!
+  updateCategory(id: Int!, name:String, description: String): Category!
 }
