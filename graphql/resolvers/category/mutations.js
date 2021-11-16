@@ -2,7 +2,11 @@ const Category = use('App/Models/Category')
 
 const mutations = {
   async createCategory (parent, args) {
-    const category = await Category.create({ name: args.name, description: args.description })
+    const category = new Category()
+
+    category.name = args.name
+    category.description = args.description
+    await category.save()
 
     return category
   },
