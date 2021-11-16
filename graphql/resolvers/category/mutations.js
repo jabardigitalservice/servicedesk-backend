@@ -20,7 +20,7 @@ const mutations = {
     if (args.description) {
       category.description = args.description
     }
-    category.save()
+    await category.save()
 
     return category
   },
