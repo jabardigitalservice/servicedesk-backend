@@ -104,9 +104,7 @@ test('delete existing category', async ({ client, assert }) => {
   const data = {
     query: `
       mutation {
-        deleteCategory(id: ${id}) {
-          id
-        }
+        deleteCategory(id: ${id})
       }
     `
   }
@@ -114,6 +112,5 @@ test('delete existing category', async ({ client, assert }) => {
   const response = await client.post('/graphql').send(data).end()
 
   response.assertStatus(200)
-  assert.exists(response.body.data.deleteCategory)
-  assert.equal(response.body.data.deleteCategory.length, 0)
+  assert.isTrue(response.body.data.deleteCategory)
 })
