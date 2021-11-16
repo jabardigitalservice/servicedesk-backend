@@ -14,8 +14,12 @@ const mutations = {
   async updateCategory (parent, args) {
     const category = await Category.findBy('id', args.id)
 
-    category.name = args.name ? args.name : category.name
-    category.description = args.description ? args.description : category.description
+    if (args.name) {
+     category.name = args.name
+    }
+    if (args.description) {
+     category.description = args.description
+    }
     category.save()
 
     return category
