@@ -15,10 +15,10 @@ const mutations = {
     const category = await Category.findBy('id', args.id)
 
     if (args.name) {
-     category.name = args.name
+      category.name = args.name
     }
     if (args.description) {
-     category.description = args.description
+      category.description = args.description
     }
     category.save()
 
