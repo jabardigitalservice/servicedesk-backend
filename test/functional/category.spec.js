@@ -26,7 +26,6 @@ test('get list of categories', async ({ client, assert }) => {
   const response = await client.post('/graphql').send(data).end()
 
   response.assertStatus(200)
-  assert.exists(response.body.data.categories)
   assert.equal(response.body.data.categories.length, 3)
 })
 
@@ -50,7 +49,6 @@ test('get detail of a category', async ({ client, assert }) => {
   const response = await client.post('/graphql').send(data).end()
 
   response.assertStatus(200)
-  assert.exists(response.body.data.getCategory)
   assert.exists(response.body.data.getCategory.id)
 })
 
@@ -68,7 +66,6 @@ test('create new category', async ({ client, assert }) => {
   const response = await client.post('/graphql').send(data).end()
 
   response.assertStatus(200)
-  assert.exists(response.body.data.createCategory)
   assert.exists(response.body.data.createCategory.id)
 })
 
@@ -91,7 +88,6 @@ test('update existing category', async ({ client, assert }) => {
   const response = await client.post('/graphql').send(data).end()
 
   response.assertStatus(200)
-  assert.exists(response.body.data)
   assert.equal(response.body.data.updateCategory.id, id)
   assert.equal(response.body.data.updateCategory.name, 'New category name')
   assert.equal(response.body.data.updateCategory.description, 'New category description')
