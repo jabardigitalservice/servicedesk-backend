@@ -34,7 +34,7 @@ test('get detail of a category', async ({ client, assert }) => {
   const category = await Factory.model('App/Models/Category').create()
   await Factory.model('App/Models/Category').createMany(2)
 
-  const id = category.$attributes.id
+  const id = category.id
 
   const data = {
     query: ` 
@@ -74,7 +74,7 @@ test('create new category', async ({ client, assert }) => {
 
 test('update existing category', async ({ client, assert }) => {
   const category = await Factory.model('App/Models/Category').create()
-  const id = category.$attributes.id
+  const id = category.id
 
   const data = {
     query: `
@@ -118,7 +118,7 @@ test('avoid to update non-existing category', async ({ client, assert }) => {
 
 test('delete existing category', async ({ client, assert }) => {
   const category = await Factory.model('App/Models/Category').create()
-  const id = category.$attributes.id
+  const id = category.id
 
   const data = {
     query: `

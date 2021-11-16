@@ -15,8 +15,8 @@ const mutations = {
     const category = await Category.findBy('id', args.id)
 
     try {
-      category.$attributes.name = args.name ? args.name : category.$attributes.name
-      category.$attributes.description = args.description ? args.description : category.$attributes.description
+      category.name = args.name ? args.name : category.name
+      category.description = args.description ? args.description : category.description
       category.save()
     } catch {
       throw new Error('User not found')
