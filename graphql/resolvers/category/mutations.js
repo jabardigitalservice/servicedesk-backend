@@ -14,13 +14,9 @@ const mutations = {
   async updateCategory (parent, args) {
     const category = await Category.findBy('id', args.id)
 
-    try {
-      category.name = args.name ? args.name : category.name
-      category.description = args.description ? args.description : category.description
-      category.save()
-    } catch {
-      throw new Error('User not found')
-    }
+    category.name = args.name ? args.name : category.name
+    category.description = args.description ? args.description : category.description
+    category.save()
 
     return category
   },
@@ -28,11 +24,7 @@ const mutations = {
   async deleteCategory (parent, args) {
     const category = await Category.findBy('id', args.id)
 
-    try {
-      await category.delete()
-    } catch {
-      throw new Error('User not found')
-    }
+    await category.delete()
 
     return (await Category.all()).toJSON()
   }

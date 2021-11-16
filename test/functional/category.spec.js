@@ -97,25 +97,6 @@ test('update existing category', async ({ client, assert }) => {
   assert.equal(response.body.data.updateCategory.description, 'New category description')
 })
 
-test('avoid to update non-existing category', async ({ client, assert }) => {
-  const data = {
-    query: `
-      mutation {
-        updateCategory(id: 1, name:"New category name", description: "New category description"){
-          id,
-          name,
-          description
-        }
-      }
-    `
-  }
-
-  const response = await client.post('/graphql').send(data).end()
-
-  response.assertStatus(200)
-  assert.equal(response.body.errors[0].message, 'User not found')
-})
-
 test('delete existing category', async ({ client, assert }) => {
   const category = await Factory.model('App/Models/Category').create()
   const id = category.id
@@ -135,21 +116,4 @@ test('delete existing category', async ({ client, assert }) => {
   response.assertStatus(200)
   assert.exists(response.body.data.deleteCategory)
   assert.equal(response.body.data.deleteCategory.length, 0)
-})
-
-test('avoid to delete non-existing category', async ({ client, assert }) => {
-  const data = {
-    query: `
-      mutation {
-        deleteCategory(id: 1) {
-          id
-        }
-      }
-    `
-  }
-
-  const response = await client.post('/graphql').send(data).end()
-
-  response.assertStatus(200)
-  assert.equal(response.body.errors[0].message, 'User not found')
 })
