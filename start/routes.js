@@ -15,9 +15,16 @@
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
+const graphQLServer = require('./../graphql')
 
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
 
 Route.get('/me', 'UserController.getMe').middleware('auth')
+
+Route.post('/graphql', async ({ request }) => {
+  return graphQLServer.executeOperation({
+    query: request.body.query,
+  })
+})
