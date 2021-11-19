@@ -123,7 +123,7 @@ test('Employee can view detail ticket support', async ({ client }) => {
       }
     }))
     .end()
-    
+
   response.assertJSONSubset({
     data: {
       ticket: {
@@ -174,7 +174,7 @@ test('Employee can update existing ticket support', async ({ client }) => {
   const username = process.env.USERNAME
   await Factory.model('App/Models/Category').createMany(4)
   await Factory.model('App/Models/Ticket').createMany(5)
-  
+
   await TicketsModel
     .query()
     .where('id', 1)
@@ -211,7 +211,7 @@ test('Employee can update existing ticket support', async ({ client }) => {
 test('Employee can create/ open new Ticket Support', async ({ client }) => {
   const username = process.env.USERNAME
   await Factory.model('App/Models/Category').createMany(4)
-  
+
   const response = await client
     .post('/graphql')
     .header({
