@@ -1,6 +1,7 @@
 type Query {
   categories: [Category]
   getCategory(id: Int!): Category
+  listOwnTickets(username: String!): [Ticket]
 }
 
 type Mutation {  

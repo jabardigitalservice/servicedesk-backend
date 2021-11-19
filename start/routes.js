@@ -26,5 +26,6 @@ Route.get('/me', 'UserController.getMe').middleware('auth')
 Route.post('/graphql', async ({ request }) => {
   return graphQLServer.executeOperation({
     query: request.body.query,
+    variables: request.body.variables
   })
 })

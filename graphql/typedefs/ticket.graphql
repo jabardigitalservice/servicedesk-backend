@@ -1,0 +1,14 @@
+type Ticket {
+    id: Int
+    username: String!
+    title: String!
+    description: String!
+    categoryByCategoryId: Category
+    attachment: String
+    status: Status!
+}
+enum Status {
+    OPEN
+    ON_PROCESS
+    CLOSED
+}
