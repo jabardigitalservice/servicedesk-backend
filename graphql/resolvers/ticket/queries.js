@@ -12,6 +12,10 @@ const queries = {
 
     return list.toJSON()
   },
+
+  async ticket (root, { id }) {
+    return await Ticket.findOrFail(id)
+  }
 }
 
 module.exports = queries

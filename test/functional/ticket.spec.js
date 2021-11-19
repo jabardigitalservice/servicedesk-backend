@@ -84,3 +84,55 @@ test('Employee can view list of own ticket support', async ({ client }) => {
     }
   })
 })
+
+test('Employee can view detail ticket support', async ({ client }) => {
+  await Factory.model('App/Models/Category').createMany(4)
+  await Factory.model('App/Models/Ticket').createMany(3)
+
+  await TicketsModel
+    .query()
+    .where('id', 1)
+    .orWhere('id', 2)
+    .update({
+      username: process.env.USERNAME
+    })
+
+  const data = await TicketsModel.findOrFail(1)
+  const foreign = await CategoriesModel.findOrFail(data.category_id)
+
+  const response = await client
+    .post('/graphql')
+    .header({
+      'content-type': 'application/json'
+    })
+    .send(JSON.stringify({
+      query: `
+        query ViewOwnTickets($id: Int!) {
+          ticket(id: $id) {
+            username
+            title
+            status
+            categoryByCategoryId {
+              name
+            }
+          }
+        }`,
+      variables: {
+        id: 1,
+      }
+    }))
+    .end()
+    
+  response.assertJSONSubset({
+    data: {
+      ticket: {
+        username: data.username,
+        title: data.title,
+        status: data.status,
+        categoryByCategoryId: {
+          name: foreign.name
+        }
+      }
+    }
+  })
+})
