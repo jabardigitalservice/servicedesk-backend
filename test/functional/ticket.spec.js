@@ -86,6 +86,7 @@ test('Employee can view list of own ticket support', async ({ client }) => {
 })
 
 test('Employee can view detail ticket support', async ({ client }) => {
+  const username = process.env.USERNAME
   await Factory.model('App/Models/Category').createMany(4)
   await Factory.model('App/Models/Ticket').createMany(3)
 
@@ -94,7 +95,7 @@ test('Employee can view detail ticket support', async ({ client }) => {
     .where('id', 1)
     .orWhere('id', 2)
     .update({
-      username: process.env.USERNAME
+      username: username
     })
 
   const data = await TicketsModel.findOrFail(1)
@@ -179,7 +180,7 @@ test('Employee can update existing ticket support', async ({ client }) => {
     .where('id', 1)
     .orWhere('id', 3)
     .update({
-      username: process.env.USERNAME
+      username: username
     })
 
   const response = await client
@@ -204,5 +205,46 @@ test('Employee can update existing ticket support', async ({ client }) => {
 
   response.assertJSONSubset({
     data: { updateTicket: 1 }
+  })
+})
+
+test('Employee can create/ open new Ticket Support', async ({ client }) => {
+  const username = process.env.USERNAME
+  await Factory.model('App/Models/Category').createMany(4)
+  
+  const response = await client
+    .post('/graphql')
+    .header({
+      'content-type': 'application/json'
+    })
+    .send(JSON.stringify({
+      query: `
+        mutation OpenTicket($inputTicket: newTicket) {
+          openTicket(input: $inputTicket) {
+            username
+            title
+            status
+          }
+        }`,
+      variables: {
+        inputTicket: {
+          username: username,
+          title: 'its a new ticket',
+          description: 'description of a new ticket by me',
+          category_id: 2,
+          status: 'OPEN'
+        }
+      }
+    }))
+    .end()
+
+  response.assertJSONSubset({
+    data: {
+      openTicket: {
+        username: username,
+        title: 'its a new ticket',
+        status: 'OPEN'
+      }
+    }
   })
 })

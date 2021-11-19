@@ -13,6 +13,10 @@ const mutations = {
       .query()
       .where('id', id)
       .update(input)
+  },
+  async openTicket (root, { input }) {
+    return await Ticket
+      .create(input)
   }
 }
 
