@@ -168,3 +168,41 @@ test('Employee can delete own ticket by Id', async ({ client }) => {
     data: { deleteTicket: true }
   })
 })
+
+test('Employee can update existing ticket support', async ({ client }) => {
+  const username = process.env.USERNAME
+  await Factory.model('App/Models/Category').createMany(4)
+  await Factory.model('App/Models/Ticket').createMany(5)
+  
+  await TicketsModel
+    .query()
+    .where('id', 1)
+    .orWhere('id', 3)
+    .update({
+      username: process.env.USERNAME
+    })
+
+  const response = await client
+    .post('/graphql')
+    .header({
+      'content-type': 'application/json'
+    })
+    .send(JSON.stringify({
+      query: `
+        mutation UpdateTicketById($id: Int!, $inputTicket: inputTicket) {
+          updateTicket(id: $id, input: $inputTicket)
+        }`,
+      variables: {
+        id: 3,
+        inputTicket: {
+          description: 'this is an updated claim',
+          status: 'ON_PROCESS'
+        }
+      }
+    }))
+    .end()
+
+  response.assertJSONSubset({
+    data: { updateTicket: 1 }
+  })
+})

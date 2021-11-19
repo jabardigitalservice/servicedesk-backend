@@ -7,6 +7,12 @@ const mutations = {
     const toDelete = await Ticket.findOrFail(id)
 
     return await toDelete.delete()
+  },
+  async updateTicket (root, { id, input }) {
+    return await Ticket
+      .query()
+      .where('id', id)
+      .update(input)
   }
 }
 

@@ -12,3 +12,10 @@ enum Status {
     ON_PROCESS
     CLOSED
 }
+input inputTicket {
+    title: String
+    description: String
+    category_id: Int
+    attachment:String
+    status: Status
+} 
