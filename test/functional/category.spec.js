@@ -1,13 +1,9 @@
 'use strict'
 
-const { test, trait, beforeEach } = use('Test/Suite')('Category')
+const { test, trait } = use('Test/Suite')('Category')
 const Factory = use('Factory')
 
 trait('Test/ApiClient')
-
-beforeEach(async () => {
-  await Factory.model('App/Models/Category').reset()
-})
 
 test('get list of categories', async ({ client, assert }) => {
   await Factory.model('App/Models/Category').createMany(3)
@@ -31,7 +27,6 @@ test('get list of categories', async ({ client, assert }) => {
 
 test('get detail of a category', async ({ client, assert }) => {
   const category = await Factory.model('App/Models/Category').create()
-  await Factory.model('App/Models/Category').createMany(2)
 
   const id = category.id
 
