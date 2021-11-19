@@ -7,7 +7,8 @@ const resolvers = {
     ...ticketResolvers.queries
   },
   Mutation: {
-    ...categoryResolvers.mutations
+    ...categoryResolvers.mutations,
+    ...ticketResolvers.mutations
   },
   Ticket: {
     ...ticketResolvers.ticket

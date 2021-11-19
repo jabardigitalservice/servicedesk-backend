@@ -136,3 +136,35 @@ test('Employee can view detail ticket support', async ({ client }) => {
     }
   })
 })
+
+test('Employee can delete own ticket by Id', async ({ client }) => {
+  const username = process.env.USERNAME
+  await Factory.model('App/Models/Category').createMany(3)
+  await Factory.model('App/Models/Ticket').createMany(4)
+
+  await TicketsModel
+    .query()
+    .where('id', 2)
+    .orWhere('id', 4)
+    .update({
+      username: username
+    })
+
+  const response = await client
+    .post('/graphql')
+    .header({
+      'content-type': 'application/json'
+    })
+    .send(JSON.stringify({
+      query: `
+        mutation DeleteTicketById($id: Int!) {
+          deleteTicket(id: $id)
+        }`,
+      variables: { id: 4 }
+    }))
+    .end()
+
+  response.assertJSONSubset({
+    data: { deleteTicket: true }
+  })
+})
