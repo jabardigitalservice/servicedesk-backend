@@ -208,7 +208,7 @@ test('Employee can update existing ticket support', async ({ client }) => {
       variables: {
         id: tickets[3].id,
         inputTicket: {
-          title: null,
+          title: '',
           description: 'this is an updated claim',
           status: 'ON_PROCESS'
         }
