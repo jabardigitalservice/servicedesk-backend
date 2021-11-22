@@ -10,6 +10,6 @@ type Mutation {
   updateCategory(id: Int!, name:String, description: String): Category!
   deleteCategory(id: Int!): Boolean!
   deleteTicket(id: Int!): Boolean
-  updateTicket(id: Int!, input: inputTicket): Int
-  openTicket(input: newTicket): Ticket
+  updateTicket(id: Int!, input: inputTicket): Ticket
+  createTicket(input: newTicket): Ticket
 }

@@ -1,11 +1,18 @@
 'use strict'
 
 const Factory = use('Factory')
+const Database = use('Database')
 const TicketsModel = require('../../app/Models/Ticket')
 const CategoriesModel = require('../../app/Models/Category')
-const { test, trait } = use('Test/Suite')('Ticket')
+const { test, trait, beforeEach } = use('Test/Suite')('Ticket')
 
 trait('Test/ApiClient')
+
+beforeEach(async () => {
+  await TicketsModel.truncate()
+  await Database.raw('truncate categories cascade')
+  await Database.raw('ALTER SEQUENCE categories_id_seq RESTART WITH 1')
+})
 
 test('Employee can view list of own ticket support', async ({ client }) => {
   const username = process.env.USERNAME
@@ -32,7 +39,7 @@ test('Employee can view list of own ticket support', async ({ client }) => {
           listOwnTickets(username: $username) {
             id
             username
-            categoryByCategoryId {
+            category {
               name
             }
             title
@@ -56,7 +63,7 @@ test('Employee can view list of own ticket support', async ({ client }) => {
           {
             id: tickets[0].id,
             username: username,
-            categoryByCategoryId: {
+            category: {
               name: categories[0].name
             },
             title: tickets[0].title,
@@ -65,7 +72,7 @@ test('Employee can view list of own ticket support', async ({ client }) => {
           {
             id: tickets[2].id,
             username: username,
-            categoryByCategoryId: {
+            category: {
               name: categories[2].name
             },
             title: tickets[2].title,
@@ -74,7 +81,7 @@ test('Employee can view list of own ticket support', async ({ client }) => {
           {
             id: tickets[3].id,
             username: username,
-            categoryByCategoryId: {
+            category: {
               name: categories[3].name
             },
             title: tickets[3].title,
@@ -113,7 +120,7 @@ test('Employee can view detail ticket support', async ({ client }) => {
             username
             title
             status
-            categoryByCategoryId {
+            category {
               name
             }
           }
@@ -130,7 +137,7 @@ test('Employee can view detail ticket support', async ({ client }) => {
         username: data.username,
         title: data.title,
         status: data.status,
-        categoryByCategoryId: {
+        category: {
           name: foreign.name
         }
       }
@@ -173,12 +180,12 @@ test('Employee can delete own ticket by Id', async ({ client }) => {
 test('Employee can update existing ticket support', async ({ client }) => {
   const username = process.env.USERNAME
   await Factory.model('App/Models/Category').createMany(4)
-  await Factory.model('App/Models/Ticket').createMany(5)
+  const tickets = await Factory.model('App/Models/Ticket').createMany(5)
 
   await TicketsModel
     .query()
-    .where('id', 1)
-    .orWhere('id', 3)
+    .where('id', tickets[1].id)
+    .orWhere('id', tickets[3].id)
     .update({
       username: username
     })
@@ -191,10 +198,14 @@ test('Employee can update existing ticket support', async ({ client }) => {
     .send(JSON.stringify({
       query: `
         mutation UpdateTicketById($id: Int!, $inputTicket: inputTicket) {
-          updateTicket(id: $id, input: $inputTicket)
+          updateTicket(id: $id, input: $inputTicket) {
+              id
+              description
+              status
+          }
         }`,
       variables: {
-        id: 3,
+        id: tickets[3].id,
         inputTicket: {
           description: 'this is an updated claim',
           status: 'ON_PROCESS'
@@ -204,7 +215,13 @@ test('Employee can update existing ticket support', async ({ client }) => {
     .end()
 
   response.assertJSONSubset({
-    data: { updateTicket: 1 }
+    data: {
+      updateTicket: {
+        id: tickets[3].id,
+        description: 'this is an updated claim',
+        status: 'ON_PROCESS'
+      }
+    }
   })
 })
 
@@ -219,8 +236,8 @@ test('Employee can create/ open new Ticket Support', async ({ client }) => {
     })
     .send(JSON.stringify({
       query: `
-        mutation OpenTicket($inputTicket: newTicket) {
-          openTicket(input: $inputTicket) {
+        mutation CreateTicket($inputTicket: newTicket) {
+          createTicket(input: $inputTicket) {
             username
             title
             status
@@ -240,7 +257,7 @@ test('Employee can create/ open new Ticket Support', async ({ client }) => {
 
   response.assertJSONSubset({
     data: {
-      openTicket: {
+      createTicket: {
         username: username,
         title: 'its a new ticket',
         status: 'OPEN'

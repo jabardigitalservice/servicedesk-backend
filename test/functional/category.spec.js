@@ -1,12 +1,14 @@
 'use strict'
 
+const Database = use('Database')
 const { test, trait, beforeEach } = use('Test/Suite')('Category')
 const Factory = use('Factory')
 
 trait('Test/ApiClient')
 
 beforeEach(async () => {
-  await Factory.model('App/Models/Category').reset()
+  await Database.raw('truncate categories cascade')
+  await Database.raw('ALTER SEQUENCE categories_id_seq RESTART WITH 1')
 })
 
 test('get list of categories', async ({ client, assert }) => {

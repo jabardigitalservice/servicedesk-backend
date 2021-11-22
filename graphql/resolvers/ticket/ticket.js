@@ -1,7 +1,7 @@
 const Category = use('App/Models/Category')
 
 const ticket = {
-  async categoryByCategoryId (parent) {
+  async category (parent) {
     return await Category.findOrFail(parent.category_id)
   }
 }

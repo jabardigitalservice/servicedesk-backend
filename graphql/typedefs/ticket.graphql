@@ -3,7 +3,7 @@ type Ticket {
     username: String!
     title: String!
     description: String!
-    categoryByCategoryId: Category
+    category: Category
     attachment: String
     status: Status!
 }
