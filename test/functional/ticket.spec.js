@@ -199,6 +199,7 @@ test('Employee can update existing ticket support', async ({ client }) => {
       query: `
         mutation UpdateTicketById($id: Int!, $inputTicket: inputTicket) {
           updateTicket(id: $id, input: $inputTicket) {
+            title
               id
               description
               status
@@ -207,6 +208,7 @@ test('Employee can update existing ticket support', async ({ client }) => {
       variables: {
         id: tickets[3].id,
         inputTicket: {
+          title: null,
           description: 'this is an updated claim',
           status: 'ON_PROCESS'
         }
@@ -217,6 +219,7 @@ test('Employee can update existing ticket support', async ({ client }) => {
   response.assertJSONSubset({
     data: {
       updateTicket: {
+        title: tickets[3].title,
         id: tickets[3].id,
         description: 'this is an updated claim',
         status: 'ON_PROCESS'
