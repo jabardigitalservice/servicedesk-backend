@@ -17,16 +17,11 @@ beforeEach(async () => {
 test('Employee can view list of own ticket support', async ({ client }) => {
   const username = process.env.USERNAME
   const categories = await Factory.model('App/Models/Category').createMany(4)
-  const tickets = await Factory.model('App/Models/Ticket').createMany(7)
+  await Factory.model('App/Models/Ticket').createMany(7)
 
-  await TicketsModel
-    .query()
-    .where('id', tickets[0].id)
-    .orWhere('id', tickets[2].id)
-    .orWhere('id', tickets[3].id)
-    .update({
-      username: username
-    })
+  const toGet = await TicketsModel.first()
+  toGet.username = username
+  await toGet.save()
 
   const response = await client
     .post('/graphql')
@@ -52,40 +47,20 @@ test('Employee can view list of own ticket support', async ({ client }) => {
     }))
     .end()
 
-  categories[0] = await CategoriesModel.find(tickets[0].category_id)
-  categories[2] = await CategoriesModel.find(tickets[2].category_id)
-  categories[3] = await CategoriesModel.find(tickets[3].category_id)
+  categories[0] = await CategoriesModel.find(toGet.category_id)
 
   response.assertJSONSubset({
     data: {
       listOwnTickets:
         [
           {
-            id: tickets[0].id,
+            id: toGet.id,
             username: username,
             category: {
               name: categories[0].name
             },
-            title: tickets[0].title,
-            status: tickets[0].status
-          },
-          {
-            id: tickets[2].id,
-            username: username,
-            category: {
-              name: categories[2].name
-            },
-            title: tickets[2].title,
-            status: tickets[2].status
-          },
-          {
-            id: tickets[3].id,
-            username: username,
-            category: {
-              name: categories[3].name
-            },
-            title: tickets[3].title,
-            status: tickets[3].status
+            title: toGet.title,
+            status: toGet.status
           }
         ]
     }
@@ -95,17 +70,11 @@ test('Employee can view list of own ticket support', async ({ client }) => {
 test('Employee can view detail ticket support', async ({ client }) => {
   const username = process.env.USERNAME
   await Factory.model('App/Models/Category').createMany(4)
-  await Factory.model('App/Models/Ticket').createMany(3)
+  await Factory.model('App/Models/Ticket').create()
 
-  await TicketsModel
-    .query()
-    .where('id', 1)
-    .orWhere('id', 2)
-    .update({
-      username: username
-    })
-
-  const data = await TicketsModel.findOrFail(1)
+  const data = await TicketsModel.first()
+  data.username = username
+  await data.save()
   const foreign = await CategoriesModel.findOrFail(data.category_id)
 
   const response = await client
@@ -148,15 +117,11 @@ test('Employee can view detail ticket support', async ({ client }) => {
 test('Employee can delete own ticket by Id', async ({ client }) => {
   const username = process.env.USERNAME
   await Factory.model('App/Models/Category').createMany(3)
-  await Factory.model('App/Models/Ticket').createMany(4)
+  await Factory.model('App/Models/Ticket').create()
 
-  await TicketsModel
-    .query()
-    .where('id', 2)
-    .orWhere('id', 4)
-    .update({
-      username: username
-    })
+  const data = await TicketsModel.first()
+  data.username = username
+  await data.save()
 
   const response = await client
     .post('/graphql')
@@ -168,7 +133,7 @@ test('Employee can delete own ticket by Id', async ({ client }) => {
         mutation DeleteTicketById($id: Int!) {
           deleteTicket(id: $id)
         }`,
-      variables: { id: 4 }
+      variables: { id: data.id }
     }))
     .end()
 
@@ -180,15 +145,11 @@ test('Employee can delete own ticket by Id', async ({ client }) => {
 test('Employee can update existing ticket support', async ({ client }) => {
   const username = process.env.USERNAME
   await Factory.model('App/Models/Category').createMany(4)
-  const tickets = await Factory.model('App/Models/Ticket').createMany(5)
+  await Factory.model('App/Models/Ticket').create()
 
-  await TicketsModel
-    .query()
-    .where('id', tickets[1].id)
-    .orWhere('id', tickets[3].id)
-    .update({
-      username: username
-    })
+  const data = await TicketsModel.first()
+  data.username = username
+  await data.save()
 
   const response = await client
     .post('/graphql')
@@ -206,7 +167,7 @@ test('Employee can update existing ticket support', async ({ client }) => {
           }
         }`,
       variables: {
-        id: tickets[3].id,
+        id: data.id,
         inputTicket: {
           title: '',
           description: 'this is an updated claim',
@@ -219,8 +180,8 @@ test('Employee can update existing ticket support', async ({ client }) => {
   response.assertJSONSubset({
     data: {
       updateTicket: {
-        title: tickets[3].title,
-        id: tickets[3].id,
+        title: data.title,
+        id: data.id,
         description: 'this is an updated claim',
         status: 'ON_PROCESS'
       }
