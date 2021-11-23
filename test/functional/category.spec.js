@@ -1,5 +1,6 @@
 'use strict'
 
+
 const Database = use('Database')
 const { test, trait, beforeEach } = use('Test/Suite')('Category')
 const Factory = use('Factory')
@@ -33,7 +34,6 @@ test('get list of categories', async ({ client, assert }) => {
 
 test('get detail of a category', async ({ client, assert }) => {
   const category = await Factory.model('App/Models/Category').create()
-  await Factory.model('App/Models/Category').createMany(2)
 
   const id = category.id
 
