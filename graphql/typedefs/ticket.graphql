@@ -1,0 +1,29 @@
+type Ticket {
+    id: Int
+    username: String!
+    title: String!
+    description: String!
+    category: Category
+    attachment: String
+    status: Status!
+}
+enum Status {
+    OPEN
+    ON_PROCESS
+    CLOSED
+}
+input inputTicket {
+    title: String @constraint(maxLength: 100, minLength: 3)
+    description: String @constraint(maxLength: 600, minLength: 3)
+    category_id: Int @constraint(min: 1)
+    attachment:String
+    status: Status
+}
+input newTicket {
+    username: String!
+    title: String! @constraint(maxLength: 100, minLength: 3)
+    description: String! @constraint(maxLength: 600, minLength: 3)
+    category_id: Int! @constraint(min: 1)
+    attachment: String
+    status: Status!
+}

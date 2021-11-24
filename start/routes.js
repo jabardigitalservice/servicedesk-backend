@@ -15,7 +15,7 @@
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
-const graphQLServer = require('./../graphql')
+const graphQlServer = require('../graphql')
 
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
@@ -24,7 +24,13 @@ Route.get('/', () => {
 Route.get('/me', 'UserController.getMe').middleware('auth')
 
 Route.post('/graphql', async ({ request }) => {
-  return graphQLServer.executeOperation({
+  return graphQlServer.executeOperation({
     query: request.body.query,
+    variables: request.body.variables
   })
+})
+
+Route.get('/graphql', async () => {
+  graphQlServer.listen(9000)
+  return { playground: 'https://studio.apollographql.com/sandbox/explorer?endpoint=http://localhost:9000' }
 })

@@ -1,10 +1,15 @@
 type Query {
   categories: [Category]
   getCategory(id: Int!): Category
+  listOwnTickets(username: String!): [Ticket]
+  ticket(id: Int!): Ticket
 }
 
 type Mutation {  
   createCategory(name: String!, description: String): Category!
   updateCategory(id: Int!, name:String, description: String): Category!
   deleteCategory(id: Int!): Boolean!
+  deleteTicket(id: Int!): Boolean!
+  updateTicket(id: Int!, input: inputTicket): Ticket!
+  createTicket(input: newTicket): Ticket!
 }

@@ -1,12 +1,17 @@
 const categoryResolvers = require('./category')
+const ticketResolvers = require('./ticket')
 
-// const { categoryQueries } = require('./category')
 const resolvers = {
   Query: {
-    ...categoryResolvers.queries
+    ...categoryResolvers.queries,
+    ...ticketResolvers.queries
   },
   Mutation: {
-    ...categoryResolvers.mutations
+    ...categoryResolvers.mutations,
+    ...ticketResolvers.mutations
+  },
+  Ticket: {
+    ...ticketResolvers.ticket
   }
 }
 
