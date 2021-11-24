@@ -28,6 +28,7 @@
     "@adonisjs/vow": "^1.0.17",
     "apollo-server": "^3.5.0",
     "graphql": "^16.0.1",
+    "graphql-constraint-directive": "^2.1.1",
     "jwks-rsa": "^2.0.5",
     "pg": "^8.7.1"
   },
