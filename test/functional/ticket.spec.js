@@ -228,3 +228,28 @@ test('Employee can create/ open new Ticket Support', async ({ client }) => {
     }
   })
 })
+
+test('Admin can view list of all ticket support', async ({ client, assert }) => {
+  await Factory.model('App/Models/Category').createMany(3)
+  await Factory.model('App/Models/Ticket').createMany(5)
+
+  const data = {
+    query: ` 
+      {
+        tickets {
+          id,
+          username,
+          title,
+          category {
+            name
+          }
+        }
+      }
+    `
+  }
+
+  const response = await client.post('/graphql').send(data).end()
+
+  response.assertStatus(200)
+  assert.equal(response.body.data.tickets.length, 5)
+})

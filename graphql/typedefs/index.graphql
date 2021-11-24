@@ -1,6 +1,7 @@
 type Query {
   categories: [Category]
   getCategory(id: Int!): Category
+  tickets: [Ticket] 
   listOwnTickets(username: String!): [Ticket]
   ticket(id: Int!): Ticket
 }

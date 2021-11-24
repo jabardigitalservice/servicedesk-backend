@@ -3,6 +3,11 @@
 const Ticket = use('App/Models/Ticket')
 
 const queries = {
+  async tickets () {
+    const tickets = await Ticket.all()
+
+    return tickets.toJSON()
+  },
 
   async listOwnTickets (root, { username }) {
     const list = await Ticket
