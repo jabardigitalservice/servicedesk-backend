@@ -13,17 +13,17 @@ enum Status {
     CLOSED
 }
 input inputTicket {
-    title: String
-    description: String
-    category_id: Int
+    title: String @constraint(maxLength: 100, minLength: 3)
+    description: String @constraint(maxLength: 600, minLength: 3)
+    category_id: Int @constraint(min: 1)
     attachment:String
     status: Status
 }
 input newTicket {
     username: String!
-    title: String!
-    description: String!
-    category_id: Int!
+    title: String! @constraint(maxLength: 100, minLength: 3)
+    description: String! @constraint(maxLength: 600, minLength: 3)
+    category_id: Int! @constraint(min: 1)
     attachment: String
     status: Status!
 }

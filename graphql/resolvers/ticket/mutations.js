@@ -10,16 +10,11 @@ const mutations = {
   },
   async updateTicket (root, { id, input }) {
     const toUpdate = await Ticket.findOrFail(id)
-    const data = {}
-    data.title = input.title ? input.title : toUpdate.title
-    data.description = input.description ? input.description : toUpdate.description
-    data.category_id = input.category_id ? input.category_id : toUpdate.category_id
-    data.status = input.status ? input.status : toUpdate.status
 
     await Ticket
       .query()
       .where('id', id)
-      .update(data)
+      .update(input)
 
     return await Ticket.findOrFail(id)
   },

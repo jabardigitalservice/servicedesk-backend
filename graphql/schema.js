@@ -1,3 +1,5 @@
+'use strict'
+const { constraintDirective, constraintDirectiveTypeDefs } = use('graphql-constraint-directive')
 const { join } = use('path')
 const { readdirSync, readFileSync } = use('fs')
 const { makeExecutableSchema } = use('@graphql-tools/schema')
@@ -13,9 +15,16 @@ gqlFiles.forEach((file) => {
   })
 })
 
-const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers
+let schema = makeExecutableSchema({
+  typeDefs: [
+    typeDefs,
+    constraintDirectiveTypeDefs
+  ],
+  resolvers,
+  schemaDirectives: {
+    constraint: constraintDirective
+  }
 })
+schema = constraintDirective()(schema)
 
 module.exports = schema
